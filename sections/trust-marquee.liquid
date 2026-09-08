@@ -1,0 +1,65 @@
+{{ 'section-trust-marquee.css' | asset_url | stylesheet_tag }}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="trust-marquee surface-light" aria-label="{{ 'trust_marquee.label' | t | default: 'Why pet owners trust us' }}">
+    <div class="trust-marquee__viewport">
+      <div class="trust-marquee__track marquee__track">
+        {%- for i in (1..2) -%}
+          <div class="trust-marquee__set" aria-hidden="{% unless forloop.first %}true{% else %}false{% endunless %}">
+            {%- for block in section.blocks -%}
+              <div class="trust-marquee__item" {% if forloop.parentloop.first %}{{ block.shopify_attributes }}{% endif %}>
+                <span class="trust-marquee__icon">{% render 'icon-badge', icon: block.settings.icon %}</span>
+                <span>{{ block.settings.label | escape }}</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Trust marquee",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "delivery", "label": "Delivery" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "secure", "label": "Secure checkout" },
+            { "value": "vet", "label": "Vet approved" }
+          ],
+          "default": "delivery"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Fast SA delivery"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "default": {
+    "blocks": [
+      { "type": "badge", "settings": { "icon": "delivery", "label": "Fast SA delivery" } },
+      { "type": "badge", "settings": { "icon": "returns", "label": "30-day returns" } },
+      { "type": "badge", "settings": { "icon": "secure", "label": "Secure checkout" } },
+      { "type": "badge", "settings": { "icon": "vet", "label": "Vet-approved" } }
+    ]
+  },
+  "presets": [
+    { "name": "Trust marquee" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,73 @@
+{%- comment -%}
+  Accepts: product, image_loading (optional: 'eager' | 'lazy', default 'lazy')
+{%- endcomment -%}
+{%- assign loading = image_loading | default: 'lazy' -%}
+{%- assign on_sale = false -%}
+{%- if product.compare_at_price > product.price -%}
+  {%- assign on_sale = true -%}
+{%- endif -%}
+
+<div class="product-card" data-tilt-card>
+  <a href="{{ product.url }}" class="product-card__media">
+    <div class="product-card__media-inner">
+      {%- if product.featured_image -%}
+        <img
+          class="product-card__image"
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          srcset="
+            {{ product.featured_image | image_url: width: 400 }} 400w,
+            {{ product.featured_image | image_url: width: 600 }} 600w,
+            {{ product.featured_image | image_url: width: 800 }} 800w
+          "
+          sizes="(min-width: 62em) 33vw, 50vw"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          loading="{{ loading }}"
+        >
+      {%- else -%}
+        <div class="product-card__image product-card__image--placeholder"></div>
+      {%- endif -%}
+    </div>
+    {%- if on_sale -%}
+      <span class="badge badge--sale product-card__badge">{{ 'product.sale' | t | default: 'Sale' }}</span>
+    {%- elsif product.available == false -%}
+      <span class="badge product-card__badge">{{ 'product.sold_out' | t | default: 'Sold out' }}</span>
+    {%- endif -%}
+  </a>
+
+  <div class="product-card__info">
+    <a href="{{ product.url }}" class="product-card__title-link">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+    </a>
+    <div class="product-card__price">
+      {%- if on_sale -%}
+        <span class="product-card__price-compare">{{ product.compare_at_price | money }}</span>
+        <span class="product-card__price-sale">{{ product.price | money }}</span>
+      {%- else -%}
+        <span>{{ product.price | money }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if product.available -%}
+    {%- if product.variants.size == 1 -%}
+      <button
+        type="button"
+        class="btn btn--secondary product-card__quick-add"
+        data-quick-add
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      >
+        {{ 'product.quick_add' | t | default: 'Quick add' }}
+      </button>
+    {%- else -%}
+      <a href="{{ product.url }}" class="btn btn--secondary product-card__quick-add">
+        {{ 'product.select_options' | t | default: 'Select options' }}
+      </a>
+    {%- endif -%}
+  {%- else -%}
+    <span class="btn btn--secondary product-card__quick-add" aria-disabled="true">
+      {{ 'product.sold_out' | t | default: 'Sold out' }}
+    </span>
+  {%- endif -%}
+</div>

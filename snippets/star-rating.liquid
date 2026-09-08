@@ -1,0 +1,8 @@
+{%- comment -%} Usage: {% render 'star-rating', rating: 5 %} — rating 1-5, whole numbers {%- endcomment -%}
+<div class="star-rating" role="img" aria-label="{{ 'reviews.rating_label' | t: rating: rating | default: rating | append: ' out of 5 stars' }}">
+  {%- for i in (1..5) -%}
+    <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false" class="star-rating__star{% if i > rating %} star-rating__star--empty{% endif %}">
+      <path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L10 14.9l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8L10 1.5Z" fill="currentColor"/>
+    </svg>
+  {%- endfor -%}
+</div>

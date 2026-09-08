@@ -1,0 +1,27 @@
+.stats-band__heading {
+  color: var(--bone);
+  max-width: 36rem;
+  margin-bottom: var(--space-2xl);
+}
+
+.stats-band__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-lg);
+}
+
+.stats-band__number {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-4xl);
+  color: var(--signal);
+  letter-spacing: var(--tracking-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-band__label {
+  color: var(--bone);
+  opacity: 0.75;
+  font-size: var(--text-sm);
+  margin-top: var(--space-2xs);
+}
