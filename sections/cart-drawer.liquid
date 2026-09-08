@@ -1,0 +1,115 @@
+{{ 'section-cart-drawer.css' | asset_url | stylesheet_tag }}
+
+{%- assign threshold = section.settings.free_shipping_threshold | times: 100 -%}
+{%- assign remaining = threshold | minus: cart.total_price -%}
+
+<div
+  id="CartDrawer"
+  class="cart-drawer"
+  data-cart-drawer
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'cart.title' | t | default: 'Your cart' }}"
+  hidden
+>
+  <div class="cart-drawer__header">
+    <h2 class="h5">{{ 'cart.title' | t | default: 'Your cart' }}</h2>
+    <button type="button" class="site-header__icon-btn" data-cart-drawer-close aria-label="{{ 'cart.close' | t | default: 'Close cart' }}">
+      {% render 'icon-close' %}
+    </button>
+  </div>
+
+  {%- if section.settings.free_shipping_threshold > 0 -%}
+    <div class="cart-drawer__shipping-bar" data-cart-shipping-bar>
+      {%- if remaining > 0 -%}
+        {%- assign remaining_money = remaining | money -%}
+        <p data-cart-shipping-message>
+          {{ 'cart.shipping_progress_html' | t: amount: remaining_money }}
+        </p>
+      {%- else -%}
+        <p data-cart-shipping-message>{{ 'cart.shipping_unlocked' | t | default: "You've unlocked free shipping!" }}</p>
+      {%- endif -%}
+      <div class="cart-drawer__progress">
+        <div
+          class="cart-drawer__progress-fill"
+          data-cart-progress-fill
+          style="--progress: {{ cart.total_price | times: 100.0 | divided_by: threshold | at_most: 100 }}%;"
+        ></div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="cart-drawer__body" data-cart-drawer-body>
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-drawer__empty" data-cart-empty>
+        <p>{{ 'cart.empty' | t | default: 'Your cart is empty — your pet is waiting.' }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">
+          {{ 'cart.start_shopping' | t | default: 'Start shopping' }}
+        </a>
+      </div>
+    {%- else -%}
+      <ul class="cart-drawer__items" data-cart-items>
+        {%- for item in cart.items -%}
+          <li class="cart-item" data-cart-item data-line="{{ forloop.index }}">
+            <a href="{{ item.url }}" class="cart-item__image" tabindex="-1">
+              <img
+                src="{{ item.image | image_url: width: 160 }}"
+                alt=""
+                width="80"
+                height="80"
+                loading="lazy"
+              >
+            </a>
+            <div class="cart-item__meta">
+              <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+              {%- if item.variant.title != 'Default Title' -%}
+                <p class="text-muted cart-item__variant">{{ item.variant.title }}</p>
+              {%- endif -%}
+              <div class="cart-item__qty" role="group" aria-label="{{ 'cart.quantity' | t | default: 'Quantity' }}">
+                <button type="button" data-cart-qty-decrease aria-label="{{ 'cart.decrease' | t | default: 'Decrease quantity' }}">&minus;</button>
+                <span data-cart-qty>{{ item.quantity }}</span>
+                <button type="button" data-cart-qty-increase aria-label="{{ 'cart.increase' | t | default: 'Increase quantity' }}">&plus;</button>
+              </div>
+            </div>
+            <div class="cart-item__price-remove">
+              <span data-cart-item-price>{{ item.final_line_price | money }}</span>
+              <button type="button" class="cart-item__remove" data-cart-remove aria-label="{{ 'cart.remove' | t: item: item.product.title | default: 'Remove item' }}">
+                {% render 'icon-close' %}
+              </button>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+
+  <div class="cart-drawer__footer" data-cart-drawer-footer {% if cart.item_count == 0 %}hidden{% endif %}>
+    <div class="cart-drawer__subtotal">
+      <span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
+      <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+    </div>
+    <p class="text-muted cart-drawer__note">
+      {{ 'cart.shipping_note' | t | default: 'Shipping and taxes calculated at checkout.' }}
+    </p>
+    <div class="cart-drawer__actions">
+      <a href="{{ routes.cart_url }}" class="btn btn--secondary">{{ 'cart.view_cart' | t | default: 'View cart' }}</a>
+      <a href="{{ routes.checkout_url }}" class="btn btn--primary">{{ 'cart.checkout' | t | default: 'Checkout' }}</a>
+    </div>
+  </div>
+</div>
+<div class="cart-drawer__backdrop" data-cart-drawer-backdrop hidden></div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "Free shipping progress bar threshold (R)",
+      "info": "Set to 0 to hide the progress bar.",
+      "default": 600
+    }
+  ]
+}
+{% endschema %}

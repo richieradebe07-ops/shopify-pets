@@ -1,0 +1,195 @@
+{{ 'section-header.css' | asset_url | stylesheet_tag }}
+
+{%- assign menu = linklists[section.settings.menu] -%}
+
+<header class="site-header" data-site-header {% if section.settings.sticky_shrink %}data-sticky-shrink{% endif %}>
+  <div class="site-header__inner container">
+    <button
+      type="button"
+      class="site-header__icon-btn site-header__menu-toggle"
+      data-mobile-nav-toggle
+      aria-expanded="false"
+      aria-controls="MobileNav"
+      aria-label="{{ 'header.menu' | t | default: 'Menu' }}"
+    >
+      {% render 'icon-menu' %}
+    </button>
+
+    <a href="{{ routes.root_url }}" class="site-header__logo">
+      {%- if section.settings.logo -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 320 }}"
+          srcset="{{ section.settings.logo | image_url: width: 160 }} 160w, {{ section.settings.logo | image_url: width: 320 }} 320w"
+          width="{{ section.settings.logo_width }}"
+          height="{{ section.settings.logo_width | times: section.settings.logo.height | divided_by: section.settings.logo.width }}"
+          alt="{{ shop.name }}"
+          loading="eager"
+        >
+      {%- else -%}
+        <span class="site-header__wordmark">RL Paws Co.</span>
+      {%- endif -%}
+    </a>
+
+    {%- if menu -%}
+      <nav class="site-header__nav" aria-label="{{ 'header.primary_nav' | t | default: 'Primary' }}">
+        <ul>
+          {%- for link in menu.links -%}
+            <li class="site-header__nav-item{% if link.links.size > 0 %} has-dropdown{% endif %}">
+              <a href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
+                {{ link.title }}
+                {%- if link.links.size > 0 -%}
+                  <span class="site-header__chevron">{% render 'icon-chevron' %}</span>
+                {%- endif -%}
+              </a>
+              {%- if link.links.size > 0 -%}
+                <div class="site-header__dropdown">
+                  <ul>
+                    {%- for child in link.links -%}
+                      <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    <div class="site-header__actions">
+      <button
+        type="button"
+        class="site-header__icon-btn"
+        data-search-toggle
+        aria-expanded="false"
+        aria-controls="HeaderSearch-{{ section.id }}"
+        aria-label="{{ 'header.search' | t | default: 'Search' }}"
+      >
+        {% render 'icon-search' %}
+      </button>
+
+      <a
+        href="{{ routes.account_url }}"
+        class="site-header__icon-btn site-header__account"
+        aria-label="{{ 'header.account' | t | default: 'Account' }}"
+      >
+        {% render 'icon-account' %}
+      </a>
+
+      <button
+        type="button"
+        class="site-header__icon-btn site-header__cart-toggle"
+        data-cart-drawer-toggle
+        aria-expanded="false"
+        aria-controls="CartDrawer"
+        aria-label="{{ 'header.cart' | t | default: 'Cart' }}"
+      >
+        {% render 'icon-cart' %}
+        <span class="site-header__cart-count" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+          {{ cart.item_count }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="site-header__search-panel" id="HeaderSearch-{{ section.id }}" data-search-panel hidden>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="site-header__search-form container">
+      <label class="visually-hidden" for="HeaderSearchInput-{{ section.id }}">
+        {{ 'header.search' | t | default: 'Search' }}
+      </label>
+      <input
+        type="search"
+        name="q"
+        id="HeaderSearchInput-{{ section.id }}"
+        placeholder="{{ 'header.search_placeholder' | t | default: 'Search products' }}"
+        autocomplete="off"
+        data-search-input
+      >
+      <input type="hidden" name="type" value="product">
+      <button type="submit" class="site-header__icon-btn">{% render 'icon-search' %}</button>
+    </form>
+    <div class="site-header__search-results" data-search-results hidden></div>
+  </div>
+</header>
+
+<div
+  class="mobile-nav"
+  id="MobileNav"
+  data-mobile-nav
+  hidden
+  aria-label="{{ 'header.menu' | t | default: 'Menu' }}"
+>
+  <div class="mobile-nav__header">
+    <span class="site-header__wordmark">RL Paws Co.</span>
+    <button
+      type="button"
+      class="site-header__icon-btn"
+      data-mobile-nav-close
+      aria-label="{{ 'header.close_menu' | t | default: 'Close menu' }}"
+    >
+      {% render 'icon-close' %}
+    </button>
+  </div>
+  {%- if menu -%}
+    <ul class="mobile-nav__list">
+      {%- for link in menu.links -%}
+        <li>
+          {%- if link.links.size > 0 -%}
+            <details class="mobile-nav__details">
+              <summary>
+                {{ link.title }}
+                <span class="mobile-nav__chevron">{% render 'icon-chevron' %}</span>
+              </summary>
+              <ul class="mobile-nav__sublist">
+                {%- for child in link.links -%}
+                  <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>
+<div class="mobile-nav__backdrop" data-mobile-nav-backdrop hidden></div>
+
+<script src="{{ 'section-header.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 80,
+      "max": 240,
+      "step": 10,
+      "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_shrink",
+      "label": "Shrink header on scroll",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

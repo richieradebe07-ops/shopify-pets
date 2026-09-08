@@ -38,14 +38,18 @@
       {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
     </a>
 
-    {%- comment -%} Announcement bar / header / footer sections are added in
-    a later pass of this build; the hero below renders standalone. {%- endcomment -%}
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
 
     <main id="MainContent" tabindex="-1">
       {{ content_for_layout }}
     </main>
 
+    {% section 'footer' %}
+    {% section 'cart-drawer' %}
+
     <script src="{{ 'motion.js' | asset_url }}" defer></script>
     <script src="{{ 'cursor.js' | asset_url }}" defer></script>
+    <script src="{{ 'cart.js' | asset_url }}" defer></script>
   </body>
 </html>
