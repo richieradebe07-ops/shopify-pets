@@ -1,0 +1,59 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
+
+<div class="main-collection section-padding">
+  <div class="container">
+    <div class="main-collection__header">
+      <div>
+        <h1>{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <div class="text-muted main-collection__description">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- form 'sort_by' -%}
+        <label class="visually-hidden" for="SortBy">{{ 'collection.sort_by' | t | default: 'Sort by' }}</label>
+        <select name="sort_by" id="SortBy" class="main-collection__sort" onchange="this.form.submit()">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      {%- endform -%}
+    </div>
+
+    {%- paginate collection.products by 24 -%}
+      {%- if collection.products.size > 0 -%}
+        <div class="main-collection__grid">
+          {%- for product in collection.products -%}
+            {%- assign card_loading = 'lazy' -%}
+            {%- if forloop.index <= 3 -%}{%- assign card_loading = 'eager' -%}{%- endif -%}
+            {%- render 'product-card', product: product, image_loading: card_loading -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <p class="text-muted">{{ 'collection.empty' | t | default: 'No products found in this collection yet.' }}</p>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="main-collection__pagination" aria-label="{{ 'collection.pagination' | t | default: 'Pagination' }}">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="btn btn--secondary">{{ 'collection.previous' | t | default: 'Previous' }}</a>
+          {%- endif -%}
+          <span class="text-muted">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="btn btn--secondary">{{ 'collection.next' | t | default: 'Next' }}</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection pages",
+  "settings": []
+}
+{% endschema %}

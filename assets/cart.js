@@ -143,7 +143,7 @@
   }
 
   document.addEventListener('submit', function (e) {
-    var form = e.target.closest('[data-cart-add-form]');
+    var form = e.target.closest('[data-cart-add-form], .product__form');
     if (!form) return;
     e.preventDefault();
 

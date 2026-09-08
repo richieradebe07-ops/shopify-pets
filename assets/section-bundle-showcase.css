@@ -87,6 +87,14 @@
   width: 100%;
 }
 
+/* .bundle-showcase__summary is a light box nested inside the section's dark
+   surface — override base.css's surface-dark button-on-dark colours so a
+   sold-out state here isn't rendered as bone-on-bone. */
+.bundle-showcase__summary .btn--secondary {
+  color: var(--text-on-light);
+  border-color: var(--line);
+}
+
 @media (max-width: 61.99em) {
   .bundle-showcase__grid {
     grid-template-columns: 1fr;

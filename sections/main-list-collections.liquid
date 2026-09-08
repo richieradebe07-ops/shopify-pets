@@ -1,0 +1,40 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
+
+<div class="main-collection section-padding">
+  <div class="container">
+    <h1 style="margin-bottom: var(--space-lg);">{{ 'collections.title' | t | default: 'Shop by category' }}</h1>
+    <div class="main-collection__grid">
+      {%- for collection in collections -%}
+        <a href="{{ collection.url }}" class="product-card">
+          <div class="product-card__media">
+            <div class="product-card__media-inner">
+              {%- if collection.featured_image -%}
+                <img
+                  src="{{ collection.featured_image | image_url: width: 600 }}"
+                  alt="{{ collection.featured_image.alt | escape }}"
+                  width="{{ collection.featured_image.width }}"
+                  height="{{ collection.featured_image.height }}"
+                  loading="lazy"
+                  class="product-card__image"
+                >
+              {%- else -%}
+                <div class="product-card__image product-card__image--placeholder"></div>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="product-card__info">
+            <h3 class="product-card__title">{{ collection.title }}</h3>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "settings": []
+}
+{% endschema %}

@@ -6,7 +6,7 @@
       <div class="site-footer__col site-footer__brand">
         <span class="site-header__wordmark" style="color: var(--bone);">RL Paws Co.</span>
         {%- if section.settings.blurb != blank -%}
-          <div class="site-footer__blurb text-muted">{{ section.settings.blurb }}</div>
+          <div class="site-footer__blurb text-muted-inverse">{{ section.settings.blurb }}</div>
         {%- endif -%}
         {%- if section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.social_tiktok != blank or section.settings.social_youtube != blank -%}
           <div class="site-footer__social">
@@ -53,7 +53,7 @@
         </ul>
       {%- endif -%}
 
-      <p class="site-footer__copyright text-muted">
+      <p class="site-footer__copyright text-muted-inverse">
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_suffix }}
       </p>
 

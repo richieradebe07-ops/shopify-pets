@@ -1,0 +1,106 @@
+.main-cart__heading {
+  margin-bottom: var(--space-lg);
+}
+
+.main-cart__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.main-cart__table th {
+  text-align: left;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--line);
+}
+
+.main-cart__table td {
+  padding-block: var(--space-md);
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.main-cart__product {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.main-cart__product img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background-color: var(--line);
+}
+
+.main-cart__product-title {
+  font-weight: 600;
+}
+
+.main-cart__remove {
+  display: inline-block;
+  margin-top: var(--space-2xs);
+  font-size: var(--text-xs);
+  text-decoration: underline;
+  color: var(--error);
+}
+
+.main-cart__qty-input {
+  width: 4rem;
+  padding: var(--space-2xs);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.main-cart__line-total {
+  font-weight: 600;
+}
+
+.main-cart__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.main-cart__summary {
+  width: min(100%, 20rem);
+}
+
+.main-cart__subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2xs);
+}
+
+.main-cart__checkout {
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+@media (max-width: 47.99em) {
+  .main-cart__table thead {
+    display: none;
+  }
+
+  .main-cart__table td {
+    display: block;
+    border-bottom: none;
+    padding-block: var(--space-2xs);
+  }
+
+  .main-cart__table tr {
+    display: block;
+    border-bottom: 1px solid var(--line);
+    padding-block: var(--space-sm);
+  }
+}

@@ -36,13 +36,43 @@
     "sale": "Sale",
     "sold_out": "Sold out",
     "quick_add": "Quick add",
-    "select_options": "Select options"
+    "select_options": "Select options",
+    "zoom": "View larger image",
+    "view_image": "View image {{ index }}",
+    "quantity": "Quantity",
+    "add_to_cart": "Add to cart",
+    "description": "Description",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "delivery_estimate_loading": "Calculating delivery estimate…",
+    "delivery_estimate_prefix": "Arrives",
+    "delivery_estimate_suffix": "if ordered today",
+    "fbt_total": "Total",
+    "fbt_add_all": "Add all to cart"
   },
   "featured_collection": {
     "no_collection": "Select a collection to display products here."
   },
   "trust_marquee": {
     "label": "Why pet owners trust us"
+  },
+  "errors": {
+    "404_eyebrow": "404"
+  },
+  "collections": {
+    "title": "Shop by category"
+  },
+  "search": {
+    "title": "Search",
+    "results_for_html": "Search results for \"{{ terms }}\"",
+    "no_results_html": "No results found for \"{{ terms }}\"."
+  },
+  "collection": {
+    "sort_by": "Sort by",
+    "empty": "No products found in this collection yet.",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next"
   },
   "footer": {
     "payment_methods": "Payment methods accepted"
@@ -59,6 +89,9 @@
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
     "subtotal": "Subtotal",
+    "product": "Product",
+    "total": "Total",
+    "update": "Update cart",
     "remove": "Remove {{ item }}",
     "view_cart": "View cart",
     "checkout": "Checkout"

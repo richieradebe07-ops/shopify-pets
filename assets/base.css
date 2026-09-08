@@ -225,6 +225,34 @@ h6, .h6 { font-size: var(--text-lg); font-weight: 600; }
 
 .text-muted { color: var(--text-muted); }
 
+/* --signal-ink is tuned for contrast on --bone; on a dark surface use the
+   raw --signal instead (still >8:1 on --ink), otherwise the eyebrow label
+   nearly disappears. */
+.surface-dark .eyebrow { color: var(--signal); }
+
+/* --slate-60 on --ink measures only ~3.1:1 — below AA for body text — so
+   muted copy sitting directly on a dark surface needs a lighter tint of
+   bone instead, not the light-surface muted colour. */
+.text-muted-inverse { color: rgba(250, 246, 240, 0.75); }
+
+/* Rich text output (product descriptions, schema richtext fields) */
+.rte p + p,
+.rte ul + p,
+.rte p + ul {
+  margin-top: 0.85em;
+}
+
+.rte ul,
+.rte ol {
+  padding-left: 1.25em;
+  list-style: revert;
+}
+
+.rte a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ==========================================================================
    Layout utilities
    ========================================================================== */
