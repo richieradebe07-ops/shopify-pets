@@ -11,7 +11,7 @@
         {%- endif -%}
       </div>
 
-      {%- form 'sort_by' -%}
+      <form method="get" action="{{ collection.url }}">
         <label class="visually-hidden" for="SortBy">{{ 'collection.sort_by' | t | default: 'Sort by' }}</label>
         <select name="sort_by" id="SortBy" class="main-collection__sort" onchange="this.form.submit()">
           {%- for option in collection.sort_options -%}
@@ -20,7 +20,7 @@
             </option>
           {%- endfor -%}
         </select>
-      {%- endform -%}
+      </form>
     </div>
 
     {%- paginate collection.products by 24 -%}
