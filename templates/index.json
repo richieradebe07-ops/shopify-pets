@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "RL Paws Co.",
+        "heading": "Engineered for the way your pet actually lives.",
+        "subheading": "Better Product, Happier Paws",
+        "body": "<p>Precision-fit gear built from the same material science as human sportswear — tested by real dogs, not focus groups.</p>",
+        "overlay_opacity": 35,
+        "text_align": "left",
+        "primary_label": "Shop the range",
+        "primary_link": "shopify://collections/all",
+        "secondary_label": "Our story",
+        "secondary_link": "shopify://pages/about"
+      }
+    }
+  },
+  "order": ["hero"]
+}

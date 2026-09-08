@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" data-build-status="in-progress">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#0F1419">
+
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    <!-- Font loading: Space Grotesk (headings), Inter (body) — swap to avoid FOIT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500&display=swap"
+    >
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    <script>document.documentElement.classList.add('js');</script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ request.page_type | handleize }}">
+    <a class="skip-link" href="#MainContent">
+      {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
+    </a>
+
+    {%- comment -%} Announcement bar / header / footer sections are added in
+    a later pass of this build; the hero below renders standalone. {%- endcomment -%}
+
+    <main id="MainContent" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    <script src="{{ 'motion.js' | asset_url }}" defer></script>
+    <script src="{{ 'cursor.js' | asset_url }}" defer></script>
+  </body>
+</html>

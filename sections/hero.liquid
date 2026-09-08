@@ -1,0 +1,183 @@
+{{ 'section-hero.css' | asset_url | stylesheet_tag }}
+
+{%- assign heading_words = section.settings.heading | split: ' ' -%}
+
+<section
+  class="hero hero--{{ section.settings.text_align }}"
+  aria-label="{{ section.settings.heading | strip_html | escape }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="hero__media" aria-hidden="true">
+    {%- if section.settings.video != blank -%}
+      <div class="hero__media-inner hero__media-inner--kenburns">
+        {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, image_size: '1920x' }}
+      </div>
+    {%- elsif section.settings.image -%}
+      <div class="hero__media-inner hero__media-inner--kenburns">
+        <img
+          src="{{ section.settings.image | image_url: width: 1600 }}"
+          srcset="
+            {{ section.settings.image | image_url: width: 640 }} 640w,
+            {{ section.settings.image | image_url: width: 960 }} 960w,
+            {{ section.settings.image | image_url: width: 1280 }} 1280w,
+            {{ section.settings.image | image_url: width: 1920 }} 1920w,
+            {{ section.settings.image | image_url: width: 2560 }} 2560w
+          "
+          sizes="100vw"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          alt=""
+          fetchpriority="high"
+          loading="eager"
+        >
+      </div>
+    {%- else -%}
+      <div class="hero__media-inner hero__media-fallback"></div>
+    {%- endif -%}
+    <div class="hero__overlay" style="--hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+  </div>
+
+  <div class="hero__content container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow hero__eyebrow" data-reveal style="--reveal-index: 0;">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <h1 class="hero__heading">
+      {%- for word in heading_words -%}
+        <span class="hero__word-wrap"><span class="hero__word" style="--word-index: {{ forloop.index0 }};">{{ word }}</span></span>{% unless forloop.last %} {% endunless %}
+      {%- endfor -%}
+    </h1>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="hero__subheading" data-reveal style="--reveal-index: 1;">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="hero__body" data-reveal style="--reveal-index: 2;">{{ section.settings.body }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.primary_label != blank or section.settings.secondary_label != blank -%}
+      <div class="hero__actions" data-reveal style="--reveal-index: 3;">
+        {%- if section.settings.primary_label != blank -%}
+          <a
+            href="{{ section.settings.primary_link | default: '#' }}"
+            class="btn btn--primary hero__cta"
+            data-magnetic
+          >
+            {{ section.settings.primary_label | escape }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.secondary_label != blank -%}
+          <a
+            href="{{ section.settings.secondary_link | default: '#' }}"
+            class="btn btn--secondary hero__cta"
+            data-magnetic
+          >
+            {{ section.settings.secondary_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "shopify-section--hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "RL Paws Co."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline",
+      "default": "Engineered for the way your pet actually lives."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading / slogan",
+      "default": "Better Product, Happier Paws"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Supporting copy",
+      "default": "<p>Precision-fit gear built from the same material science as human sportswear — tested by real dogs, not focus groups.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Recommended 2560 x 1600px minimum. Used if no video is set."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Background video (optional)",
+      "info": "Overrides the background image when set. Keep under 8 seconds and export without audio."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay darkness",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Label",
+      "default": "Shop the range"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Label",
+      "default": "Our story"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}
