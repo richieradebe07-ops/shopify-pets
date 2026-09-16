@@ -19,7 +19,7 @@
       {%- endif -%}
     </div>
 
-    {%- if collection -%}
+    {%- if collection and collection.products.size > 0 -%}
       <div class="featured-collection__grid">
         {%- for product in collection.products limit: section.settings.products_to_show -%}
           <div data-reveal style="--reveal-index: {{ forloop.index | at_most: 4 }};">
@@ -27,8 +27,10 @@
           </div>
         {%- endfor -%}
       </div>
+    {%- elsif collection -%}
+      <p class="text-muted featured-collection__empty">{{ 'featured_collection.no_products' | t | default: 'New gear is on its way — check back soon.' }}</p>
     {%- else -%}
-      <p class="text-muted">{{ 'featured_collection.no_collection' | t | default: 'Select a collection to display products here.' }}</p>
+      <p class="text-muted featured-collection__empty">{{ 'featured_collection.no_collection' | t | default: 'Select a collection to display products here.' }}</p>
     {%- endif -%}
   </div>
 </div>
