@@ -1,0 +1,146 @@
+{{ 'section-bundle-showcase.css' | asset_url | stylesheet_tag }}
+
+{%- assign bundle_product = all_products[section.settings.bundle_product] -%}
+{%- assign individual_total = 0 -%}
+{%- assign item_count = 0 -%}
+{%- for block in section.blocks -%}
+  {%- assign item_product = all_products[block.settings.product] -%}
+  {%- if item_product != blank -%}
+    {%- assign individual_total = individual_total | plus: item_product.price -%}
+    {%- assign item_count = item_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if bundle_product and item_count > 0 -%}
+  {%- assign savings = individual_total | minus: bundle_product.price -%}
+  {%- assign savings_money = savings | money -%}
+
+  <div class="bundle-showcase surface-dark section-padding">
+    <div class="container bundle-showcase__grid">
+      <div class="bundle-showcase__items" data-reveal style="--reveal-index: 0;">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="bundle-showcase__heading">{{ section.settings.heading }}</h2>
+
+        <ul class="bundle-showcase__list">
+          {%- for block in section.blocks -%}
+            {%- assign item_product = all_products[block.settings.product] -%}
+            {%- if item_product != blank -%}
+              <li class="bundle-showcase__item" {{ block.shopify_attributes }}>
+                <img
+                  src="{{ item_product.featured_image | image_url: width: 160 }}"
+                  alt=""
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                >
+                <span class="bundle-showcase__item-name">{{ item_product.title }}</span>
+                <span class="bundle-showcase__item-price">{{ item_product.price | money }}</span>
+              </li>
+              {%- unless forloop.last -%}
+                <li class="bundle-showcase__plus" aria-hidden="true">+</li>
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="bundle-showcase__summary" data-reveal style="--reveal-index: 1;">
+        <div class="bundle-showcase__price-row">
+          <span class="bundle-showcase__individual-total">{{ individual_total | money }}</span>
+          <span class="badge badge--signal bundle-showcase__save">
+            {{ 'bundle.you_save' | t: amount: savings_money }}
+          </span>
+        </div>
+        <p class="bundle-showcase__bundle-price">{{ bundle_product.price | money }}</p>
+        {%- if section.settings.body != blank -%}
+          <div class="bundle-showcase__body text-muted">{{ section.settings.body }}</div>
+        {%- endif -%}
+
+        {%- if bundle_product.available -%}
+          {%- if bundle_product.variants.size == 1 -%}
+            <button
+              type="button"
+              class="btn btn--primary bundle-showcase__cta"
+              data-quick-add
+              data-variant-id="{{ bundle_product.selected_or_first_available_variant.id }}"
+            >
+              {{ section.settings.cta_label | default: 'Add bundle to cart' | escape }}
+            </button>
+          {%- else -%}
+            <a href="{{ bundle_product.url }}" class="btn btn--primary bundle-showcase__cta">
+              {{ section.settings.cta_label | default: 'Shop this bundle' | escape }}
+            </a>
+          {%- endif -%}
+        {%- else -%}
+          <span class="btn btn--secondary bundle-showcase__cta" aria-disabled="true">
+            {{ 'product.sold_out' | t | default: 'Sold out' }}
+          </span>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bundle showcase",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The bundle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything your dog needs, for less"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Supporting copy",
+      "default": "<p>Buy the essentials together and save — no code needed, the discount is already baked in.</p>"
+    },
+    {
+      "type": "product",
+      "id": "bundle_product",
+      "label": "Bundle product",
+      "info": "The actual purchasable product, priced at the bundle discount."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Add bundle to cart"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Bundle item",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Bundle showcase",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

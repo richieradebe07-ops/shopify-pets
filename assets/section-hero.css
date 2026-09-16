@@ -1,0 +1,170 @@
+/* ==========================================================================
+   Hero section
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 92svh;
+  overflow: hidden;
+  background-color: var(--ink);
+  isolation: isolate;
+}
+
+.hero--center {
+  align-items: center;
+  text-align: center;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero__media-inner,
+.hero__media-inner video,
+.hero__media-inner img,
+.hero__media-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero__media-fallback {
+  background: linear-gradient(160deg, var(--ink), #1c2b30 60%, var(--signal-ink));
+}
+
+.hero__media-inner--kenburns {
+  animation: hero-kenburns 24s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes hero-kenburns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__media-inner--kenburns {
+    animation: none;
+  }
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(15, 20, 25, calc(var(--hero-overlay-opacity, 0.35) + 0.25)) 0%,
+    rgba(15, 20, 25, var(--hero-overlay-opacity, 0.35)) 55%,
+    rgba(15, 20, 25, calc(var(--hero-overlay-opacity, 0.35) * 0.6)) 100%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--space-3xl) var(--space-2xl);
+  max-width: 44rem;
+  color: var(--bone);
+}
+
+.hero--center .hero__content {
+  max-width: 50rem;
+  margin-inline: auto;
+}
+
+.hero__eyebrow {
+  color: var(--signal);
+  margin-bottom: var(--space-sm);
+}
+
+.hero__heading {
+  color: var(--bone);
+  font-size: var(--text-5xl);
+  margin-bottom: var(--space-md);
+}
+
+.hero__word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+}
+
+.hero__word {
+  display: inline-block;
+  animation: hero-word-in var(--duration-reveal) var(--ease-reveal) both;
+  animation-delay: calc(var(--word-index, 0) * var(--stagger-step));
+}
+
+@keyframes hero-word-in {
+  from { transform: translateY(110%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.hero__subheading {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--signal);
+  margin-bottom: var(--space-sm);
+}
+
+.hero__body {
+  font-size: var(--text-lg);
+  color: var(--bone);
+  opacity: 0.88;
+  max-width: 34rem;
+  margin-bottom: var(--space-lg);
+}
+
+.hero--center .hero__body {
+  margin-inline: auto;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.hero--center .hero__actions {
+  justify-content: center;
+}
+
+.hero__cta {
+  transition: transform var(--duration-fast) var(--ease-reveal),
+              background-color var(--duration-fast) ease,
+              box-shadow var(--duration-fast) ease;
+}
+
+/* Hero always sits on a dark overlay, regardless of section-editor theme,
+   so the secondary (outline) button needs light text explicitly. */
+.hero__cta.btn--secondary {
+  color: var(--bone);
+  border-color: rgba(250, 246, 240, 0.5);
+}
+
+.hero__cta.btn--secondary:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
+@media (max-width: 47.99em) {
+  .hero {
+    min-height: 100svh;
+    align-items: flex-end;
+  }
+
+  .hero__content {
+    padding-block-end: var(--space-2xl);
+    max-width: none;
+  }
+
+  .hero__heading {
+    font-size: var(--text-4xl);
+  }
+}

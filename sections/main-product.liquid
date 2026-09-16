@@ -1,0 +1,343 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+{%- capture variants_json -%}
+[
+  {%- for variant in product.variants -%}
+    {
+      "id": {{ variant.id }},
+      "available": {{ variant.available }},
+      "price": {{ variant.price }},
+      "price_formatted": {{ variant.price | money | json }},
+      "compare_at_price": {{ variant.compare_at_price | default: 0 }},
+      "compare_at_price_formatted": {{ variant.compare_at_price | money | json }},
+      "featured_image": {{ variant.featured_image.src | image_url: width: 1200 | json }},
+      "options": {{ variant.options | json }},
+      "title": {{ variant.title | json }}
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+]
+{%- endcapture -%}
+
+<section class="product" data-product-section data-product-url="{{ product.url }}">
+  <div class="container product__layout">
+
+    {%- comment -%} ---- Gallery ---- {%- endcomment -%}
+    <div class="product__gallery" data-product-gallery>
+      <button type="button" class="product__main-image" data-gallery-main-trigger aria-label="{{ 'product.zoom' | t | default: 'View larger image' }}">
+        {%- if product.featured_media -%}
+          <img
+            src="{{ product.featured_media | image_url: width: 1200 }}"
+            srcset="
+              {{ product.featured_media | image_url: width: 600 }} 600w,
+              {{ product.featured_media | image_url: width: 900 }} 900w,
+              {{ product.featured_media | image_url: width: 1200 }} 1200w
+            "
+            sizes="(min-width: 62em) 45vw, 100vw"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            data-gallery-main-image
+            fetchpriority="high"
+          >
+        {%- else -%}
+          <div class="product__main-image-placeholder"></div>
+        {%- endif -%}
+      </button>
+
+      {%- if product.media.size > 1 -%}
+        <div class="product__thumbnails" role="list">
+          {%- for media in product.media -%}
+            <button
+              type="button"
+              class="product__thumbnail{% if forloop.first %} is-active{% endif %}"
+              data-gallery-thumb
+              data-full-src="{{ media | image_url: width: 1200 }}"
+              aria-label="{{ 'product.view_image' | t: index: forloop.index | default: 'View image' }}"
+              aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+            >
+              <img src="{{ media | image_url: width: 160 }}" alt="" width="64" height="64" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---- Buy box ---- {%- endcomment -%}
+    <div class="product__info">
+      {%- if section.settings.show_rating -%}
+        {% render 'star-rating', rating: section.settings.default_rating %}
+      {%- endif -%}
+
+      <h1 class="product__title">{{ product.title }}</h1>
+
+      <div class="product__price" data-product-price>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="product-card__price-compare" data-price-compare>{{ current_variant.compare_at_price | money }}</span>
+          <span class="product-card__price-sale" data-price-current>{{ current_variant.price | money }}</span>
+        {%- else -%}
+          <span data-price-current>{{ current_variant.price | money }}</span>
+          <span data-price-compare hidden></span>
+        {%- endif -%}
+      </div>
+
+      {%- if product.description != blank -%}
+        <div class="product__excerpt text-muted">{{ product.description | strip_html | truncatewords: 28 }}</div>
+      {%- endif -%}
+
+      {%- form 'product', product, id: 'ProductForm', class: 'product__form' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-selected-variant-id>
+
+        {%- for option in product.options_with_values -%}
+          <fieldset class="product__option">
+            <legend class="product__option-label">{{ option.name }}</legend>
+            <div class="product__pills" role="radiogroup" aria-label="{{ option.name }}">
+              {%- for value in option.values -%}
+                <button
+                  type="button"
+                  role="radio"
+                  class="product__pill{% if value == option.selected_value %} is-selected{% endif %}"
+                  data-option-pill
+                  data-option-index="{{ forloop.parentloop.index0 }}"
+                  data-value="{{ value | escape }}"
+                  aria-checked="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+                >
+                  {{ value }}
+                </button>
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endfor -%}
+
+        <div class="product__quantity">
+          <label class="product__option-label" for="ProductQuantity">{{ 'product.quantity' | t | default: 'Quantity' }}</label>
+          <div class="product__qty-stepper">
+            <button type="button" data-qty-decrease aria-label="{{ 'cart.decrease' | t | default: 'Decrease quantity' }}">&minus;</button>
+            <input type="number" id="ProductQuantity" name="quantity" value="1" min="1" inputmode="numeric" data-qty-input>
+            <button type="button" data-qty-increase aria-label="{{ 'cart.increase' | t | default: 'Increase quantity' }}">&plus;</button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn--primary product__add-to-cart"
+          data-add-to-cart-btn
+          {% unless current_variant.available %}disabled{% endunless %}
+        >
+          <span
+            data-add-to-cart-label
+            data-available="{{ 'product.add_to_cart' | t | default: 'Add to cart' }}"
+            data-sold-out="{{ 'product.sold_out' | t | default: 'Sold out' }}"
+          >
+            {%- if current_variant.available -%}
+              {{ 'product.add_to_cart' | t | default: 'Add to cart' }}
+            {%- else -%}
+              {{ 'product.sold_out' | t | default: 'Sold out' }}
+            {%- endif -%}
+          </span>
+        </button>
+        <p class="product__form-error" data-cart-form-error hidden></p>
+      {%- endform -%}
+
+      {%- if section.settings.show_trust_row -%}
+        <div class="product__trust-row">
+          <span>{% render 'icon-badge', icon: 'delivery' %} {{ section.settings.trust_1 }}</span>
+          <span>{% render 'icon-badge', icon: 'secure' %} {{ section.settings.trust_2 }}</span>
+          <span>{% render 'icon-badge', icon: 'returns' %} {{ section.settings.trust_3 }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_delivery_estimate -%}
+        <div
+          class="product__delivery"
+          data-delivery-estimate
+          data-min-days="{{ section.settings.delivery_min_days }}"
+          data-max-days="{{ section.settings.delivery_max_days }}"
+          data-prefix="{{ 'product.delivery_estimate_prefix' | t | default: 'Arrives' | escape }}"
+          data-suffix="{{ 'product.delivery_estimate_suffix' | t | default: 'if ordered today' | escape }}"
+        >
+          {% render 'icon-badge', icon: 'delivery' %}
+          <span data-delivery-estimate-text>{{ 'product.delivery_estimate_loading' | t | default: 'Calculating delivery estimate…' }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} ---- Accordion ---- {%- endcomment -%}
+      <div class="product__accordion">
+        {%- if product.description != blank -%}
+          <details open>
+            <summary>{{ 'product.description' | t | default: 'Description' }}</summary>
+            <div class="product__accordion-body rte">{{ product.description }}</div>
+          </details>
+        {%- endif -%}
+        {%- if section.settings.shipping_info != blank -%}
+          <details>
+            <summary>{{ 'product.shipping' | t | default: 'Shipping' }}</summary>
+            <div class="product__accordion-body rte">{{ section.settings.shipping_info }}</div>
+          </details>
+        {%- endif -%}
+        {%- if section.settings.returns_info != blank -%}
+          <details>
+            <summary>{{ 'product.returns' | t | default: 'Returns' }}</summary>
+            <div class="product__accordion-body rte">{{ section.settings.returns_info }}</div>
+          </details>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="product__lightbox" data-gallery-lightbox hidden role="dialog" aria-modal="true" aria-label="{{ 'product.zoom' | t | default: 'View larger image' }}">
+    <button type="button" class="site-header__icon-btn product__lightbox-close" data-gallery-lightbox-close aria-label="{{ 'cart.close' | t | default: 'Close' }}">
+      {% render 'icon-close' %}
+    </button>
+    <img src="" alt="" width="1200" height="1200" data-gallery-lightbox-image>
+  </div>
+
+  {%- comment -%} ---- Frequently bought together ---- {%- endcomment -%}
+  {%- assign fbt_products = section.blocks | where: 'type', 'fbt_product' -%}
+  {%- if fbt_products.size > 0 -%}
+    <div class="container product__fbt">
+      <h2 class="h4">{{ section.settings.fbt_heading | default: 'Frequently bought together' }}</h2>
+      <div class="product__fbt-grid" data-fbt-grid data-current-variant-id="{{ current_variant.id }}" data-current-price="{{ current_variant.price }}">
+        <div class="product__fbt-item product__fbt-item--current">
+          {%- if product.featured_image -%}
+            <img src="{{ product.featured_image | image_url: width: 200 }}" alt="" width="80" height="80" loading="lazy">
+          {%- endif -%}
+          <div>
+            <p class="product__fbt-name">{{ product.title }}</p>
+            <p class="text-muted">{{ current_variant.price | money }}</p>
+          </div>
+        </div>
+        {%- for block in fbt_products -%}
+          {%- assign fbt_product = all_products[block.settings.product] -%}
+          {%- if fbt_product != blank -%}
+            <span class="product__fbt-plus" aria-hidden="true">+</span>
+            <label class="product__fbt-item" {{ block.shopify_attributes }}>
+              <input
+                type="checkbox"
+                data-fbt-checkbox
+                data-variant-id="{{ fbt_product.selected_or_first_available_variant.id }}"
+                data-price="{{ fbt_product.selected_or_first_available_variant.price }}"
+                checked
+              >
+              <img src="{{ fbt_product.featured_image | image_url: width: 200 }}" alt="" width="80" height="80" loading="lazy">
+              <div>
+                <p class="product__fbt-name">{{ fbt_product.title }}</p>
+                <p class="text-muted">{{ fbt_product.selected_or_first_available_variant.price | money }}</p>
+              </div>
+            </label>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="product__fbt-footer">
+        <p>{{ 'product.fbt_total' | t | default: 'Total' }}: <strong data-fbt-total>{{ current_variant.price | money }}</strong></p>
+        <button type="button" class="btn btn--primary" data-fbt-add-all>
+          {{ 'product.fbt_add_all' | t | default: 'Add all to cart' }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{%- comment -%} ---- Sticky mobile add-to-cart bar ---- {%- endcomment -%}
+<div class="product__sticky-bar" data-sticky-atc hidden>
+  <div class="product__sticky-bar-inner container">
+    <div class="product__sticky-info">
+      <span class="product__sticky-title">{{ product.title }}</span>
+      <span data-sticky-price>{{ current_variant.price | money }}</span>
+    </div>
+    <button type="button" class="btn btn--primary" data-sticky-add-to-cart>
+      {{ 'product.add_to_cart' | t | default: 'Add to cart' }}
+    </button>
+  </div>
+</div>
+
+<script type="application/json" data-product-variants>{{ variants_json }}</script>
+<script src="{{ 'section-main-product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Product information",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show star rating",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "default_rating",
+      "label": "Default rating (until reviews are connected)",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_row",
+      "label": "Show trust row",
+      "default": true
+    },
+    { "type": "text", "id": "trust_1", "label": "Trust item 1", "default": "Fast SA delivery" },
+    { "type": "text", "id": "trust_2", "label": "Trust item 2", "default": "Secure checkout" },
+    { "type": "text", "id": "trust_3", "label": "Trust item 3", "default": "30-day returns" },
+    {
+      "type": "checkbox",
+      "id": "show_delivery_estimate",
+      "label": "Show delivery estimate",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delivery_min_days",
+      "label": "Delivery estimate — minimum business days",
+      "min": 1,
+      "max": 14,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "delivery_max_days",
+      "label": "Delivery estimate — maximum business days",
+      "min": 1,
+      "max": 21,
+      "default": 5
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_info",
+      "label": "Shipping info",
+      "default": "<p>Dispatched within 1 business day. Free shipping on orders over R600.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "returns_info",
+      "label": "Returns info",
+      "default": "<p>Not the right fit? Return it within 30 days, no questions asked.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Frequently bought together"
+    },
+    {
+      "type": "text",
+      "id": "fbt_heading",
+      "label": "Heading",
+      "default": "Frequently bought together"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fbt_product",
+      "name": "Companion product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" }
+      ]
+    }
+  ],
+  "max_blocks": 3
+}
+{% endschema %}

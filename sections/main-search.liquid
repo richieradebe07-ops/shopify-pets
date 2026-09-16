@@ -1,0 +1,56 @@
+{{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-collection.css' | asset_url | stylesheet_tag }}
+
+<div class="main-collection section-padding">
+  <div class="container">
+    <div class="main-collection__header">
+      <div>
+        <h1>
+          {%- if search.performed -%}
+            {{ 'search.results_for_html' | t: terms: search.terms | default: 'Search results' }}
+          {%- else -%}
+            {{ 'search.title' | t | default: 'Search' }}
+          {%- endif -%}
+        </h1>
+      </div>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="site-header__search-form" style="margin-bottom: var(--space-lg);">
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'header.search_placeholder' | t | default: 'Search products' }}">
+      <input type="hidden" name="type" value="product">
+      <button type="submit" class="site-header__icon-btn">{% render 'icon-search' %}</button>
+    </form>
+
+    {%- paginate search.results by 24 -%}
+      {%- if search.performed and search.results.size > 0 -%}
+        <div class="main-collection__grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {%- render 'product-card', product: item -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          <nav class="main-collection__pagination" aria-label="{{ 'collection.pagination' | t | default: 'Pagination' }}">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="btn btn--secondary">{{ 'collection.previous' | t | default: 'Previous' }}</a>
+            {%- endif -%}
+            <span class="text-muted">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="btn btn--secondary">{{ 'collection.next' | t | default: 'Next' }}</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- elsif search.performed -%}
+        <p class="text-muted">{{ 'search.no_results_html' | t: terms: search.terms | default: 'No results found.' }}</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,91 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "RL Paws Co.",
+        "heading": "Engineered for the way your pet actually lives.",
+        "subheading": "Better Product, Happier Paws",
+        "body": "<p>Precision-fit gear built from the same material science as human sportswear — tested by real dogs, not focus groups.</p>",
+        "overlay_opacity": 35,
+        "text_align": "left",
+        "primary_label": "Shop the range",
+        "primary_link": "shopify://collections/all",
+        "secondary_label": "Our story",
+        "secondary_link": "shopify://pages/about"
+      }
+    },
+    "trust-marquee": {
+      "type": "trust-marquee",
+      "blocks": {
+        "delivery": { "type": "badge", "settings": { "icon": "delivery", "label": "Fast SA delivery" } },
+        "returns": { "type": "badge", "settings": { "icon": "returns", "label": "30-day returns" } },
+        "secure": { "type": "badge", "settings": { "icon": "secure", "label": "Secure checkout" } },
+        "vet": { "type": "badge", "settings": { "icon": "vet", "label": "Vet-approved" } }
+      },
+      "block_order": ["delivery", "returns", "secure", "vet"]
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "The range",
+        "heading": "Gear that earns its place on the leash",
+        "collection": "all",
+        "products_to_show": 6,
+        "view_all_label": "View all"
+      }
+    },
+    "problem-solution": {
+      "type": "problem-solution",
+      "blocks": {
+        "row-1": {
+          "type": "row",
+          "settings": {
+            "pain_point": "\"My dog pulls so hard on walks my shoulder hurts.\"",
+            "solution_heading": "The No-Pull Harness",
+            "body": "<p>A front-clip design redirects pulling force sideways, not forward — most dogs stop pulling within the first walk.</p>",
+            "link_label": "Shop the harness"
+          }
+        },
+        "row-2": {
+          "type": "row",
+          "settings": {
+            "pain_point": "\"He's out of the yard before I even notice the gate's open.\"",
+            "solution_heading": "The GPS Collar Tag",
+            "body": "<p>A featherlight tracker with a 30-day battery — know exactly where he is, in real time, from your phone.</p>",
+            "link_label": "Shop the collar tag"
+          }
+        }
+      },
+      "block_order": ["row-1", "row-2"]
+    },
+    "stats-band": {
+      "type": "stats-band",
+      "blocks": {
+        "pets": { "type": "stat", "settings": { "value": 12000, "decimals": 0, "suffix": "+", "label": "Happy pets" } },
+        "shipped": { "type": "stat", "settings": { "value": 38000, "decimals": 0, "suffix": "+", "label": "Products shipped" } },
+        "rating": { "type": "stat", "settings": { "value": 4.9, "decimals": 1, "suffix": "★", "label": "Average rating" } }
+      },
+      "block_order": ["pets", "shipped", "rating"]
+    },
+    "testimonial-carousel": {
+      "type": "testimonial-carousel"
+    },
+    "ugc-grid": {
+      "type": "ugc-grid"
+    },
+    "newsletter": {
+      "type": "newsletter"
+    }
+  },
+  "order": [
+    "hero",
+    "trust-marquee",
+    "featured-collection",
+    "problem-solution",
+    "stats-band",
+    "testimonial-carousel",
+    "ugc-grid",
+    "newsletter"
+  ]
+}

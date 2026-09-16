@@ -1,0 +1,120 @@
+{{ 'section-problem-solution.css' | asset_url | stylesheet_tag }}
+
+<div class="problem-solution section-padding">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="problem-solution__intro" data-reveal>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      <div class="problem-solution__row{% if forloop.index0 is odd %} problem-solution__row--reverse{% endif %}" {{ block.shopify_attributes }}>
+        <div class="problem-solution__media" data-reveal>
+          {%- if block.settings.image -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 900 }}"
+              srcset="
+                {{ block.settings.image | image_url: width: 500 }} 500w,
+                {{ block.settings.image | image_url: width: 900 }} 900w,
+                {{ block.settings.image | image_url: width: 1300 }} 1300w
+              "
+              sizes="(min-width: 62em) 45vw, 100vw"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              alt="{{ block.settings.image.alt | escape }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            <div class="problem-solution__media-placeholder"></div>
+          {%- endif -%}
+        </div>
+        <div class="problem-solution__content" data-reveal style="--reveal-index: 1;">
+          <p class="problem-solution__pain-point">{{ block.settings.pain_point | escape }}</p>
+          <h3>{{ block.settings.solution_heading }}</h3>
+          <div class="text-muted problem-solution__body">{{ block.settings.body }}</div>
+          {%- if block.settings.link_label != blank -%}
+            <a href="{{ block.settings.link | default: '#' }}" class="btn btn--secondary">
+              {{ block.settings.link_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Problem / solution",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Built with a reason"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We designed around real problems, not trends"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "pain_point",
+          "label": "Pain point",
+          "default": "\"My dog pulls so hard on walks my shoulder hurts.\""
+        },
+        {
+          "type": "text",
+          "id": "solution_heading",
+          "label": "Solution heading",
+          "default": "The No-Pull Harness"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>A front-clip design redirects pulling force sideways, not forward — most dogs stop pulling within the first walk.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Shop the harness"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Problem / solution",
+      "blocks": [
+        { "type": "row" },
+        { "type": "row" }
+      ]
+    }
+  ]
+}
+{% endschema %}

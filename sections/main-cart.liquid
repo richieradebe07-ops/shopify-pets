@@ -1,0 +1,90 @@
+{{ 'section-main-cart.css' | asset_url | stylesheet_tag }}
+
+<div class="main-cart section-padding">
+  <div class="container">
+    <h1 class="main-cart__heading">{{ 'cart.title' | t | default: 'Your cart' }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-drawer__empty">
+        <p>{{ 'cart.empty' | t | default: 'Your cart is empty — your pet is waiting.' }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">
+          {{ 'cart.start_shopping' | t | default: 'Start shopping' }}
+        </a>
+      </div>
+    {%- else -%}
+      {%- form 'cart', cart, class: 'main-cart__form' -%}
+        <table class="main-cart__table">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'cart.product' | t | default: 'Product' }}</th>
+              <th scope="col">{{ 'cart.quantity' | t | default: 'Quantity' }}</th>
+              <th scope="col">{{ 'cart.total' | t | default: 'Total' }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td>
+                  <div class="main-cart__product">
+                    <img
+                      src="{{ item.image | image_url: width: 160 }}"
+                      alt=""
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                    >
+                    <div>
+                      <a href="{{ item.url }}" class="main-cart__product-title">{{ item.product.title }}</a>
+                      {%- if item.variant.title != 'Default Title' -%}
+                        <p class="text-muted">{{ item.variant.title }}</p>
+                      {%- endif -%}
+                      <p class="text-muted">{{ item.original_price | money }}</p>
+                      <a href="{{ item.url_to_remove }}" class="main-cart__remove">
+                        {{ 'cart.remove' | t: item: item.product.title | default: 'Remove' }}
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="updates[{{ forloop.index }}]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    inputmode="numeric"
+                    class="main-cart__qty-input"
+                    aria-label="{{ 'cart.quantity' | t | default: 'Quantity' }}"
+                  >
+                </td>
+                <td class="main-cart__line-total">{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="main-cart__footer">
+          <button type="submit" name="update" class="btn btn--secondary">
+            {{ 'cart.update' | t | default: 'Update cart' }}
+          </button>
+          <div class="main-cart__summary">
+            <p class="main-cart__subtotal">
+              <span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span>
+              <span>{{ cart.total_price | money }}</span>
+            </p>
+            <p class="text-muted">{{ 'cart.shipping_note' | t | default: 'Shipping and taxes calculated at checkout.' }}</p>
+            <button type="submit" name="checkout" class="btn btn--primary main-cart__checkout">
+              {{ 'cart.checkout' | t | default: 'Checkout' }}
+            </button>
+          </div>
+        </div>
+      {%- endform -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart page",
+  "settings": []
+}
+{% endschema %}

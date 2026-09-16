@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "fbt-1": { "type": "fbt_product", "settings": {} },
+        "fbt-2": { "type": "fbt_product", "settings": {} }
+      },
+      "block_order": ["fbt-1", "fbt-2"],
+      "settings": {
+        "show_rating": true,
+        "default_rating": 5,
+        "show_trust_row": true,
+        "trust_1": "Fast SA delivery",
+        "trust_2": "Secure checkout",
+        "trust_3": "30-day returns",
+        "show_delivery_estimate": true,
+        "delivery_min_days": 2,
+        "delivery_max_days": 5,
+        "fbt_heading": "Frequently bought together"
+      }
+    },
+    "related": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "You might also like",
+        "heading": "Complete the kit",
+        "collection": "all",
+        "products_to_show": 3,
+        "view_all_label": "View all"
+      }
+    }
+  },
+  "order": ["main", "related"]
+}

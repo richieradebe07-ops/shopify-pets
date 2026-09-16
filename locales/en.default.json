@@ -1,0 +1,99 @@
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "announcement": {
+    "label": "Announcement",
+    "dismiss": "Dismiss announcement"
+  },
+  "header": {
+    "menu": "Menu",
+    "close_menu": "Close menu",
+    "primary_nav": "Primary",
+    "search": "Search",
+    "search_placeholder": "Search products",
+    "account": "Account",
+    "cart": "Cart"
+  },
+  "newsletter": {
+    "email_label": "Email address",
+    "placeholder": "you@email.com",
+    "invalid_email": "Enter a valid email address.",
+    "success": "You're on the list — welcome to the pack."
+  },
+  "reviews": {
+    "rating_label": "{{ rating }} out of 5 stars"
+  },
+  "testimonials": {
+    "previous": "Previous testimonial",
+    "next": "Next testimonial",
+    "label": "Customer testimonials"
+  },
+  "bundle": {
+    "you_save": "Save {{ amount }}"
+  },
+  "product": {
+    "sale": "Sale",
+    "sold_out": "Sold out",
+    "quick_add": "Quick add",
+    "select_options": "Select options",
+    "zoom": "View larger image",
+    "view_image": "View image {{ index }}",
+    "quantity": "Quantity",
+    "add_to_cart": "Add to cart",
+    "description": "Description",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "delivery_estimate_loading": "Calculating delivery estimate…",
+    "delivery_estimate_prefix": "Arrives",
+    "delivery_estimate_suffix": "if ordered today",
+    "fbt_total": "Total",
+    "fbt_add_all": "Add all to cart"
+  },
+  "featured_collection": {
+    "no_collection": "Select a collection to display products here."
+  },
+  "trust_marquee": {
+    "label": "Why pet owners trust us"
+  },
+  "errors": {
+    "404_eyebrow": "404"
+  },
+  "collections": {
+    "title": "Shop by category"
+  },
+  "search": {
+    "title": "Search",
+    "results_for_html": "Search results for \"{{ terms }}\"",
+    "no_results_html": "No results found for \"{{ terms }}\"."
+  },
+  "collection": {
+    "sort_by": "Sort by",
+    "empty": "No products found in this collection yet.",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "footer": {
+    "payment_methods": "Payment methods accepted"
+  },
+  "cart": {
+    "title": "Your cart",
+    "close": "Close cart",
+    "shipping_progress_html": "Add {{ amount }} more for free shipping",
+    "shipping_unlocked": "You've unlocked free shipping!",
+    "shipping_note": "Shipping and taxes calculated at checkout.",
+    "empty": "Your cart is empty — your pet is waiting.",
+    "start_shopping": "Start shopping",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "subtotal": "Subtotal",
+    "product": "Product",
+    "total": "Total",
+    "update": "Update cart",
+    "remove": "Remove {{ item }}",
+    "view_cart": "View cart",
+    "checkout": "Checkout"
+  }
+}
