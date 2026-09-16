@@ -29,3 +29,10 @@
     align-items: flex-start;
   }
 }
+
+.featured-collection__empty {
+  padding-block: var(--space-xl);
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+}
